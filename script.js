@@ -1,3 +1,6 @@
+'use strict'
+const readlineSync = require("readline-sync");
+
 class Card{
     constructor(rank,symbol){
         this.rank = rank;
@@ -46,3 +49,47 @@ class Deck32{
     }
 }
 
+class Play21{
+    constructor(){
+        //initialise the deck, shuffle it
+        this.deck = new Deck32();
+        this.deck.shuffle();
+        this.playerSum = 0;
+        this.playerCards = [];
+        this.dealerSum = 0;
+        this.dealerCards = [];
+    }
+    initGame(){
+        //draw two cards to player 
+        //TODO:dealer play
+        this.playerCards.push(this.deck.draw());
+        this.playerCards.push(this.deck.draw());
+    }
+    getValueCard(cardRank){
+        switch (cardRank){
+            case 1 : if (this.playerSum + 11 > 21){ return 1;}else{return 11;};break;
+            case 11,12,13 : return 10;break;
+            default: return cardRank; 
+        }
+    }
+    updatePlayerSum(){
+        for(let card of this.playerCards){
+           this.playerSum += this.getValueCard(card.rank);
+        }
+    }
+    checkWinner(){
+        if (this.playerSum > this.dealerSum){
+            return "Player Won";
+        }else{
+            return "Dealer Won";
+        }
+    }
+    isBust(){
+        if(this.playerSum > 21 || this.dealerSum> 21){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+}
