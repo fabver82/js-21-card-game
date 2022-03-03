@@ -67,6 +67,9 @@ class Player{
         this.hand = [];
         this.stack = 100;
     }
+    setStack(stack){
+        this.stack=stack;
+    }
     draw(card){
         this.hand.push(card);
     }
@@ -166,7 +169,13 @@ standButton.style.visibility = 'hidden';
 const dealerList = document.querySelector('.dealer-card-list');
 const dealerTotal= document.querySelector('.dealer-total');
 const newGameButton = document.querySelector('.new');
-let game = new Play21();
+const stackTextField = document.querySelector('.stack-text');
+stackTextField.style.visibility='hidden';
+const stackField = document.querySelector('.stack');
+stackField.textContent="100";
+const betField = document.querySelector('#bet');
+let game = undefined;
+
 
 const updatePlayerList = function(){
     playerList.innerHTML='';
@@ -204,6 +213,10 @@ const updateWinnerField = function(){
 newGameButton.addEventListener('click',function(){
     //new game
     game = new Play21();
+    stackTextField.style.visibility='visible';
+    game.player.setStack(parseInt(stackField.textContent));
+    game.player.stack-=betField.value;
+    stackField.textContent=game.player.stack;
     game.initGame();
     dealerList.innerHTML=''
     dealerTotal.textContent='';
