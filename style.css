@@ -1,0 +1,8 @@
+body{
+    background-color: rgb(255,255,255);
+    background-color: linear-gradient(132deg, rgba(255,255,255,1) 0%, rgba(55,212,116,0) 50%, rgba(255,255,255,0) 100%);
+    
+}
+.stand{
+    visibility: hidden;
+}

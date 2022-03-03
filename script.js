@@ -3,9 +3,17 @@ class Card{
         this.rank = rank;
         this.symbol = symbol;
     }
+    get symbolEmoji(){
+        switch(this.symbol){
+            case 'Spade': return "&#9824;";
+            case 'Heart': return "&#9829;";
+            case 'Club': return "&#9827;";
+            case 'Diamond': return "&#9830;";
+        }
+    }
     get toString(){
         switch (this.rank){
-            case 1: return `Ace of ${this.symbol}`;
+            case 1: return `Ace${this.symbolEmoji}`;
             case 2:
             case 3:
             case 4:
@@ -14,10 +22,10 @@ class Card{
             case 7:
             case 8:
             case 9:
-            case 10 : return `${this.rank} of ${this.symbol}`;
-            case 11: return `Jack of ${this.symbol}`;
-            case 12: return `Queen of ${this.symbol}`;
-            case 13: return `King of ${this.symbol}`;
+            case 10 : return `${this.rank}${this.symbolEmoji}`;
+            case 11: return `Jack${this.symbolEmoji}`;
+            case 12: return `Queen${this.symbolEmoji}`;
+            case 13: return `King${this.symbolEmoji}`;
         }
     }
 }
@@ -32,7 +40,7 @@ class Deck{
         for(let i=start;i<=13;i++){
             let card = new Card(i,'Heart');
             this.list.push(card);
-            card = new Card(i,'Spades');
+            card = new Card(i,'Spade');
             this.list.push(card);
             card = new Card(i,'Club');
             this.list.push(card);
