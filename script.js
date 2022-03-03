@@ -13,7 +13,7 @@ class Card{
     }
     get toString(){
         switch (this.rank){
-            case 1: return `Ace${this.symbolEmoji}`;
+            case 1: return `Ace ${this.symbolEmoji}`;
             case 2:
             case 3:
             case 4:
@@ -215,6 +215,7 @@ const updateWinnerField = function(){
         newGameButton.style.visibility = 'visible';
         standButton.style.visibility = 'hidden';
         drawButton.style.visibility = 'hidden';
+        betField.style.visibility = 'visible';
     }
 }
 
@@ -223,20 +224,25 @@ newGameButton.addEventListener('click',function(){
     game = new Play21();
     stackTextField.style.visibility='visible';
     game.player.setStack(parseInt(stackField.textContent));
-    game.player.stack-=betField.value;
-    stackField.textContent=game.player.stack;
-    game.initGame();
-    dealerList.innerHTML=''
-    dealerTotal.textContent='';
-    newGameButton.style.visibility='hidden';
-    drawButton.style.visibility = 'visible';
-    standButton.style.visibility='visible';
-    
-    //show player card
-    updatePlayerList();
-    //show total
-    updateTotalPlayer();
-    updateWinnerField();
+    if(game.player.stack>= betField.value){
+        game.player.stack-=betField.value;
+        stackField.textContent=game.player.stack;
+        game.initGame();
+        dealerList.innerHTML=''
+        dealerTotal.textContent='';
+        betField.style.visibility='hidden';
+        newGameButton.style.visibility='hidden';
+        drawButton.style.visibility = 'visible';
+        standButton.style.visibility='visible';
+        
+        //show player card
+        updatePlayerList();
+        //show total
+        updateTotalPlayer();
+        updateWinnerField();
+    }else{
+        textField.textContent = "You cannot play more than "+game.player.stack
+    }
 })
 
 
@@ -257,12 +263,16 @@ standButton.addEventListener('click',function(){
     updateDealerList();
     updateTotalDealer();
     while (game.dealer.total < game.player.total){
-        game.dealer.draw(game.deck.draw());
-        updateDealerList();
-        updateTotalDealer();
-        game.setSum(game.dealer);
-        console.log('dealer total:'+game.dealer.total);
+        setInterval(console.log('wait...'), 2000);
+        dealerDraw();
     }
     game.dealer.setStand();
     updateWinnerField();
 })
+function dealerDraw(){
+    game.dealer.draw(game.deck.draw());
+    updateDealerList();
+    updateTotalDealer();
+    game.setSum(game.dealer);
+    console.log('dealer total:'+game.dealer.total);
+}

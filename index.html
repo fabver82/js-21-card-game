@@ -9,17 +9,29 @@
 </head>
 <body>
     <h1>Blackjack</h1>
-    <h2 class="text">You have 100 token, place your bet a hit the deal button</h2>
-    <p class="stack-text">Stack = <span class="stack"></span></p>
-    <label for="bet"></label><input type="number" id="bet" name="bet" value="1"/>
-    <a href="#" class="new">Deal</a>
-    <a href="#" class="draw">Draw</a>
-    <a href="#" class="stand">Stand</a>
+    <section>
+        <h2 class="text">You have 100 token, place your bet a hit the deal button</h2>
+    </section>
+    <section>
+        <p class="stack-text">Stack = <span class="stack"></span></p>
+        <label for="bet"></label><input type="number" id="bet" name="bet" min="1" value="1"/>
+        <a href="#" class="new">Deal</a>
+    </section>
     
-    <p class="player-card-list"></p>
-    <p class="player-total"></p>
-    <p class="dealer-card-list"></p>
-    <p class="dealer-total"></p>
+    <section>
+        <a href="#" class="draw">Draw</a>
+        <a href="#" class="stand">Stand</a>
+    </section>
+    <section>
+        <h3>Player Cards</h3>
+        <p class="player-card-list"></p>
+        <p class="player-total"></p>
+    </section>
+    <section>
+        <h3>Dealer Cards</h3>
+        <p class="dealer-card-list"></p>
+        <p class="dealer-total"></p>
+    </section>
     <script src="script.js"></script>    
 </body>
 </html>
