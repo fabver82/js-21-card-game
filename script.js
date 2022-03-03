@@ -73,8 +73,15 @@ class Player{
     setSum(sum){
         this.total=sum;
     }
-    stand(){
+    setStand(){
         this.stand = true;  
+    }
+    isBust(){
+        if (this.total > 21){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
@@ -112,31 +119,30 @@ class Play21{
         this.player.draw(this.deck.draw());
         this.dealer.draw(this.deck.draw());
     }
-    getSum(player){
+    setSum(player){
         let sum = 0;
         for(let card of player.hand){
-            if(card.rank==1){
-                sum += 11;
-                if (sum> 21){
-                    sum -= 10;
-                }
-            }
             if (card.rank>10){
                 sum+=10;
             }else{
                 sum += card.rank
             }
         }
-        return sum;
+        for(let card of player.hand){
+            if(card.rank==1 && sum+10<=21){
+                sum+=10;
+            }
+        }
+        player.total=sum;
     }
     checkWinner(){
         if(this.player.total == 21){
             return "Player Won with 21";
         }
-        if(this.isBust(this.player)){
+        if(this.player.isBust()){
             return "BUSTED!";
         }
-        if(this.isBust(this.dealer)){
+        if(this.dealer.isBust()){
             return "Player Won";
         }
         if (this.player.total > this.dealer.total && this.player.stand){
@@ -146,13 +152,6 @@ class Play21{
             return "Dealer Won"
         }
         return 'draw or stand?';
-    }
-    isBust(player){
-        if(player.total>21){
-            return true;
-        }else{
-            return false;
-        } 
     }
 }
 
@@ -171,76 +170,78 @@ let game = new Play21();
 
 const updatePlayerList = function(){
     playerList.innerHTML='';
-    for(let card of game.playerCards){
+    for(let card of game.player.hand){
         console.log(card);
         playerList.innerHTML += "<div class='card'>"+card.toString+"</div>"; 
     }
 }
 const updateDealerList = function(){
     dealerList.innerHTML='';
-    for(let card of game.dealerCards){
+    for(let card of game.dealer.hand){
         console.log(card);
         dealerList.innerHTML += "<div class='card'>"+card.toString+"</div>"; 
     }
 }
 const updateTotalPlayer = function(){
-    playerTotal.textContent = `you have ${game.updateSum('player')}`;
+    game.setSum(game.player);
+    playerTotal.textContent = `you have ${game.player.total}`;
 }
 const updateTotalDealer = function(){
-    dealerTotal.textContent = `Dealer have ${game.updateSum('dealer')}`;
+    game.setSum(game.dealer);
+    dealerTotal.textContent = `Dealer have ${game.dealer.total}`;
 }
 
 const updateWinnerField = function(){
-    let winner = game.checkWinner('player');
+    let winner = game.checkWinner();
     textField.textContent = winner;
     if (winner!=='draw or stand?'){
         newGameButton.style.visibility = 'visible';
         standButton.style.visibility = 'hidden';
         drawButton.style.visibility = 'hidden';
     }
-
 }
 
 newGameButton.addEventListener('click',function(){
     //new game
+    game = new Play21();
     game.initGame();
     dealerList.innerHTML=''
     dealerTotal.textContent='';
     newGameButton.style.visibility='hidden';
     drawButton.style.visibility = 'visible';
     standButton.style.visibility='visible';
-    updateWinnerField();
+    
     //show player card
     updatePlayerList();
     //show total
     updateTotalPlayer();
+    updateWinnerField();
 })
 
 
 drawButton.addEventListener('click', function(){
-    game.drawCard('player');
+    game.player.draw(game.deck.draw());
     updatePlayerList();
     updateTotalPlayer();
     updateWinnerField();
-    if (game.isBust('player')){
+    if (game.player.isBust()){
         drawButton.style.visibility='hidden';
     }
     
 })
 standButton.addEventListener('click',function(){
-    game.stand('player');
+    game.player.setStand();
     drawButton.style.visibility = 'hidden';
     standButton.style.visibility = 'hidden';
     updateDealerList();
     updateTotalDealer();
-    while (game.updateSum('dealer') < 15){
-        game.drawCard('dealer');
+    while (game.dealer.total < game.player.total){
+        game.dealer.draw(game.deck.draw());
         updateDealerList();
         updateTotalDealer();
-        game.updateSum('dealer');
+        game.setSum(game.dealer);
+        console.log('dealer total:'+game.dealer.total);
     }
-    game.stand('dealer');
+    game.dealer.setStand();
     updateWinnerField();
-    
-
 })
