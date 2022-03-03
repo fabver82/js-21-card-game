@@ -1,5 +1,3 @@
-//const readlineSync = require("readline-sync");
-
 class Card{
     constructor(rank,symbol){
         this.rank = rank;
@@ -138,17 +136,20 @@ class Play21{
         }
         player.total=sum;
     }
-    checkWinner(){
+    checkWinner(bet){
         if(this.player.total == 21){
+            this.player.stack += 2*bet;
             return "Player Won with 21";
         }
         if(this.player.isBust()){
             return "BUSTED!";
         }
         if(this.dealer.isBust()){
+            this.player.stack += 2*bet;
             return "Player Won";
         }
         if (this.player.total > this.dealer.total && this.player.stand){
+            this.player.stack += 2*bet;
             return "Player Won";
         }
         if(this.player.total <= this.dealer.total && this.player.stand){
@@ -175,8 +176,6 @@ const stackField = document.querySelector('.stack');
 stackField.textContent="100";
 const betField = document.querySelector('#bet');
 let game = undefined;
-
-
 const updatePlayerList = function(){
     playerList.innerHTML='';
     for(let card of game.player.hand){
@@ -201,7 +200,8 @@ const updateTotalDealer = function(){
 }
 
 const updateWinnerField = function(){
-    let winner = game.checkWinner();
+    let winner = game.checkWinner(betField.value);
+    stackField.textContent = game.player.stack;
     textField.textContent = winner;
     if (winner!=='draw or stand?'){
         newGameButton.style.visibility = 'visible';
